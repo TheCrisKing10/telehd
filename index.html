@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TV Selector</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 20px;
+      padding: 20px;
+      width: 90vw;
+      max-width: 1200px;
+    }
+
+    .channel {
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .channel:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .channel img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+    }
+
+    .modal-content button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .modal-content button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <!-- Generar 15 recuadros -->
+    <script>
+      for (let i = 1; i <= 15; i++) {
+        document.write(`
+          <div class="channel" onclick="openModal(${i})">
+            <img src="./images/canal${i}.png" alt="Canal ${i}">
+          </div>
+        `);
+      }
+    </script>
+  </div>
+
+  <div id="modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h3>Selecciona una opción</h3>
+      <div id="options"></div>
+    </div>
+  </div>
+
+  <script>
+    const urlData = {
+      1: [
+        'https://www.telegratishd.com/canal-5-en-vivo.html',
+        'https://www.tvplusgratis2.com/canal-5-en-vivo.html',
+        'https://telefullhd.com/canal-5-en-vivo/',
+        'https://www.tvlibrehd.com/en-vivo/canal5/',
+        'https://www.cablevisionhd.com/canal-5-en-vivo.html'
+      ],
+      2: [
+        'https://www.telegratishd.com/azteca-uno-en-vivo.html',
+        'https://www.tvlibrehd.com/en-vivo/aztecauno/',
+        'https://www.cablevisionhd.com/azteca-uno-en-vivo.html',
+        // '',
+        // ''
+      ],
+      3: [
+        'https://www.telegratishd.com/azteca-7-en-vivo.html',
+        'https://www.tvplusgratis2.com/azteca-7-en-vivo.html',
+        'https://telefullhd.com/azteca-7-en-vivo/',
+        'https://www.tvlibrehd.com/en-vivo/azteca7/',
+        'https://www.cablevisionhd.com/azteca-7-en-vivo.html'
+      ],
+      4: [
+        'https://telefullhd.com/las-estrellas-en-vivo/',
+        'https://www.tvlibrehd.com/en-vivo/lasestrellas/',
+        'https://www.cablevisionhd.com/las-estrellas-en-vivo.html',
+        // '',
+        // ''
+      ],
+      5: [
+        'https://www.telegratishd.com/tudn-en-vivo.html',
+        'https://www.tvplusgratis2.com/tudn-en-vivo.html',
+        'https://www.tvlibrehd.com/en-vivo/tudn/',
+        'https://www.cablevisionhd.com/tudn-en-vivo.html',
+        ''
+      ],
+      // 6: [
+      //   '',
+      //   '',
+      //   '',
+      //   '',
+      //   ''
+      // ],
+      // 7: [
+      //   '',
+      //   '',
+      //   '',
+      //   '',
+      //   ''
+      // ],
+      8: [
+        'https://www.rojadirectaenvivo.pl/',
+        'https://rojadirecta-tv.net/',
+        // '',
+        // '',
+        // ''
+      ],
+      // Agrega más canales aquí hasta el 15
+    };
+
+    function openModal(channelId) {
+      const modal = document.getElementById('modal');
+      const options = document.getElementById('options');
+      options.innerHTML = '';
+
+      const urls = urlData[channelId] || [];
+
+      urls.forEach((url, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = `Opción ${index + 1}`;
+        btn.onclick = () => {
+          window.open(url, '_blank');
+          closeModal();
+        };
+        options.appendChild(btn);
+      });
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+  </script>
+</body>
+</html>
